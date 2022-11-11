@@ -2,7 +2,7 @@ import axios from 'axios'
 class Api {
     constructor() {
         this.axios = axios.create({
-            baseURL: `${process.env.REACT_APP_BACKEND_BASE_URL}`
+            baseURL: "https://movie-ebooking.herokuapp.com/"
         })
     }
 
