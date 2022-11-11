@@ -6,6 +6,7 @@ import { Alert, AlertSuccess } from '../../components/Alert/Alert';
 import auth from "../../services/Auth"
 
 function SignLogin() {
+    console.log(Api);
     const history = useHistory();
     if (auth.isAuthenciated()) {
         history.push("/dashboard/user")
