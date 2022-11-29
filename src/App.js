@@ -1,13 +1,15 @@
-import "./App.css"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-import routes from "./routes/paths";
+import { BrowserRouter as Router, Switch } from "react-router-dom"
+import routes from "./routes/Routes";
+import ProtectedRoute from "./routes/ProtectedRoute";
+
 function App() {
+
   return (
     <Router>
       <Switch>
         {
           routes.map((route, index) => (
-            <Route key={index} path={route.path} component={route.element} exact={route.exact} />
+            <ProtectedRoute key={index} path={route.path} component={route.element} exact={route.exact} public={route.public} />
           ))
         }
       </Switch>
