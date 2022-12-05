@@ -1,8 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
-import Auth from '../../../services/Auth'
+import React from 'react'
+import AAuth from '../../../services/AdminAuth'
 import Api from '../../../apis/Api'
-import { MOVIEDETAILS, PROFILE, DASHBOARD } from '../../../routes/Path'
+import { ADMIN, ADDMOVIE } from '../../../routes/Path'
 import {
     Col,
     Dropdown,
@@ -25,10 +24,8 @@ import {
     ContentBox
 } from './layout.css'
 
-function Layout({ Component, props, Breadcrumb = "None", title, active, set }) {
-    document.title = title
-    const { _id } = Auth.getDetails();
-    const [values, setValues] = useState({ fname: "", lname: "", phone: "" })
+function Layout({ Component, props, Breadcrumb = "None", active }) {
+    const { fname, lname } = AAuth.getDetails();
     const Handle_DropDown = () => {
         const profile_menu = document.getElementById("menu");
         if (!profile_menu.classList.contains("show"))
@@ -41,39 +38,28 @@ function Layout({ Component, props, Breadcrumb = "None", title, active, set }) {
         Api.get("/user/logout", { Credential: true })
             .then(res => console.log(res))
             .catch(err => console.log(err))
-        if (Auth.isAuthenciated())
-            Auth.logout(() => props.history.push("/"))
+        if (AAuth.isAuthenciated())
+            AAuth.logout(() => props.history.push("/"))
     }
-    useEffect(() => {
-        Api.get(`user/findByID/${_id}`)
-            .then(res => {
-                if (res.status) {
-                    const { fname, lname, email } = res.data
-                    set(email)
-                    setValues({ ...values, fname: fname, lname: lname })
-                }
-            })
-            .catch(error => console.log(error))
-    }, [_id])
     return (
         <>
             <LeftBar>
                 <div className="sidebar">
                     <LogoBar>
                         <a href='#0'>
-                            <img src="./assets/images/logo/logo.png" alt="logo" className="img-fluid" />
+                            <img src="./assets/images/logo/logo.svg" alt="logo" className="img-fluid" />
                         </a>
                     </LogoBar>
                     <NavigationBar>
                         <VerticalMenu>
                             <li>
-                                <a href={DASHBOARD}>
+                                <a href={ADMIN}>
                                     <span className={active === "Dash" ? "active" : ""}>Dashboard</span>
                                 </a>
                             </li>
                             <li>
-                                <a href={MOVIEDETAILS}>
-                                    <span className={active === "Movie" ? "active" : ""}>Movies</span>
+                                <a href={ADDMOVIE}>
+                                    <span className={active === "AddMovie" ? "active" : ""}>Movies</span>
                                 </a>
                             </li>
                         </VerticalMenu>
@@ -101,19 +87,11 @@ function Layout({ Component, props, Breadcrumb = "None", title, active, set }) {
                                                 <DropDownMenu id='menu'>
                                                     <DropDownItem>
                                                         <div className="profile-name">
-                                                            <h5>{(values.fname && values.lname) && ` ${values.fname} ${values.lname}`}</h5>
+                                                            <h5>{(fname && lname) && ` ${fname} ${lname}`}</h5>
                                                         </div>
                                                     </DropDownItem>
                                                     <DropDownMoreItems>
                                                         <ul>
-                                                            <li className='d-flex'>
-                                                                <a href={PROFILE} className='icon'>
-                                                                    <span className="material-symbols-outlined">
-                                                                        person
-                                                                    </span>
-                                                                    <span> My Profile</span>
-                                                                </a>
-                                                            </li>
                                                             <li className='d-flex'>
                                                                 <a href='#0' className='icon' onClick={Handle_Logout}>
                                                                     <span className="material-symbols-outlined">
@@ -139,7 +117,7 @@ function Layout({ Component, props, Breadcrumb = "None", title, active, set }) {
                     <Row className='align-items-center'>
                         <Col className='col-md-8 col-lg-8'>
                             <PageTitle>
-                                Hello,{(values.fname && values.lname) && ` ${values.fname} ${values.lname}`}
+                                Hello,{(fname && lname) && ` ${fname} ${lname}`}
                             </PageTitle>
                             <BreadcrumbbarList>
                                 <ol className='breadcrumb'>

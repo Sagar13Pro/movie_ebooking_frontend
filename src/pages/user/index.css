@@ -11,7 +11,16 @@ body {
   flex-direction: column;
   font-family: 'Montserrat', sans-serif;
   margin: 0;
-  background-color: #001232;
+  background-color: #07162e !important;
+  color: #fff !important;
+}
+
+svg {
+  color: #000;
+}
+
+.font-color-dark {
+  color: #000;
 }
 
 h1 {

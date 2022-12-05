@@ -38,14 +38,14 @@ const ButtonElement = styled.button`
 `;
 
 
-export default function Button({ title = "title", variant = "primary", disabled = false, func, ...props }) {
+export default function Button({ title = "title", variant = "primary", disabled = false, type = "button", func, ...props }) {
     const callback = (func) => {
         if (func)
             func()
     }
     return (
         <>
-            <ButtonElement variant={variant} {...props} onClick={() => callback(func)} disabled={disabled}>
+            <ButtonElement variant={variant} {...props} onClick={() => callback(func)} disabled={disabled} type={type}>
                 {title}
             </ButtonElement>
         </>

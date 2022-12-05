@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 const DropdownMenu = styled.div`
     position: relative;
-
+    min-width: 200px;
+    max-width: ${props => props.MaxWidth ? props.MaxWidth : '250px'};
     & > button {
         position: relative;
         z-index: 2;
@@ -70,7 +71,11 @@ const Menu = styled.div`
         visibility: visible;
     }
 `;
-function Dropdown({ values }) {
+
+const DropButton = styled.button`
+    border : ${props => props.border ? '1px solid #f00 !important' : 'none'};
+`
+function Dropdown({ values, border }) {
 
     const [selected, setSelected] = useState("More Actions");
 
@@ -81,15 +86,17 @@ function Dropdown({ values }) {
         const dropdown = document.getElementById("dropdown");
         const icon = document.getElementById("icon");
 
-        if (shouldOpen) {
-            dropdown.classList.add("open");
-        } else {
-            dropdown.classList.remove("open");
-        }
+        if (dropdown) {
+            if (shouldOpen) {
+                dropdown.classList.add("open");
+            } else {
+                dropdown.classList.remove("open");
+            }
 
-        icon.innerText = dropdown.classList.contains("open")
-            ? "close"
-            : "expand_more";
+            icon.innerText = dropdown.classList.contains("open")
+                ? "close"
+                : "expand_more";
+        }
     };
 
     const handleDropClick = event => {
@@ -102,12 +109,12 @@ function Dropdown({ values }) {
     return (
         <>
             <DropdownMenu className='dropdown' id='dropdown' onClick={handleDropClick}>
-                <button>
+                <DropButton border={selected === "More Actions" ? true : false}>
                     {selected}
                     <span id="icon" className="material-symbols-outlined">
                         expand_more
                     </span>
-                </button>
+                </DropButton>
                 <Menu>
                     {values.map((el, index) => <button key={index} onClick={() => Handle_Change(el)}>{el}</button>)}
                 </Menu>

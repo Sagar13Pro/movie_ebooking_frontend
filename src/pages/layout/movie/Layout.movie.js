@@ -1,15 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from "../../../components/Button/Button"
-import { LOGIN, INDEX, MOVIE } from "../../../routes/Path"
+import { LOGIN, INDEX, MOVIELIST, EVENTLIST } from "../../../routes/Path"
 import TypewriterComponent from 'typewriter-effect';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel"
+import Api from '../../../apis/Api';
 
 import {
     Header, Container, HeaderWrapper, Logo, Menu, Items, Link, Section, BurgerMenu, Banner, BannerContent, Title, Span, SearchSections, SearchTab, Row, Col, SearchHeader, TabMenuUl, TabForm, TabArea, TabFormGroup, TabFormInput, TabImage, TabItem, TabMenuList, TabThumbnail, CustomSection, CustomHeader, CustomTabArea, CarouselImage, CarouselItems, CarouselThumb, HeaderLeft, HeaderLeftTitle, HeaderRight, HeaderRightList, FooterArea, FooterContent, FooterLeft, FooterLinks, FooterSection
 } from "./layout.css"
 
-function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = true, MovieSection = true, Page = "Home", children, props }) {
+function Base({ banner_title, banner_paragraph, banner_section = true, search_section = true, event_section = true, movie_section = true, page = "Home", title, children, props }) {
+
+    document.title = title;
+    const [Thumbnail, setThumbnail] = useState([]);
+    const [EventThumb, setEventThumb] = useState([]);
+
+    useEffect(() => {
+        Api.get(`/movie/all`)
+            .then(res => {
+                if (res.data.status)
+                    setThumbnail(res.data.movies)
+            })
+            .catch(er => console.log(er))
+        Api.get(`/event/all`)
+            .then(res => {
+                if (res.data.status)
+                    setEventThumb(res.data.events)
+            })
+            .catch(er => console.log(er))
+    }, [])
+
+
     const handle_Search_Btn = () => {
         let movieBtn = document.getElementById("movie-btn")
         let eventBtn = document.getElementById("event-btn")
@@ -32,12 +54,19 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
         }
     }
     // burger bar
-    const Handle_Menu = (e) => {
+    const Handle_Menu = () => {
+
         const bar = document.getElementById("bar")
-        if (!bar.classList.contains("active"))
+        const menu = document.getElementById("menu")
+
+        if (!bar.classList.contains("active") && !menu.classList.contains("active")) {
             bar.classList.add("active")
-        else
+            menu.classList.add("active")
+        }
+        else {
             bar.classList.remove("active")
+            menu.classList.remove("active")
+        }
     }
     return (
         <div style={{ color: "#fff" }}>
@@ -47,10 +76,10 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
                         <Logo>
                             <a href='/'>Logo</a>
                         </Logo>
-                        <Menu>
-                            <Items><Link href={INDEX} className={`${Page === "Home" ? "active" : ''}`}>Home</Link></Items>
-                            <Items><Link href={MOVIE} className={`${Page === "Movie" ? "active" : ''}`}>Movies</Link></Items>
-                            <Items><Link href="#0" className={`${Page === "Event" ? "active" : ''}`} >Events</Link></Items>
+                        <Menu id='menu'>
+                            <Items><Link href={`${page === "Home" ? "#0" : INDEX}`} className={`${page === "Home" ? "active" : ''}`}>Home</Link></Items>
+                            <Items><Link href={`${page === "Movie" ? "#0" : MOVIELIST}`} className={`${page === "Movie" ? "active" : ''}`}>Movies</Link></Items>
+                            <Items><Link href={`${page === "Event" ? "#0" : EVENTLIST}`} className={`${page === "Event" ? "active" : ''}`} >Events</Link></Items>
                             <Items><Button title="Login" func={() => props.history.push(LOGIN)} /></Items>
                         </Menu>
                         <BurgerMenu id='bar' onClick={Handle_Menu}>
@@ -60,39 +89,45 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
                 </Container>
             </Header>
 
-            <Section>
-                <Banner style={{ "backgroundImage": "url('./assets/images/sign_login/sign_login_bg.jpg')" }}></Banner>
-                <Container>
-                    <BannerContent>
-                        <Title>
-                            {BannerTitle ?
-                                (
-                                    BannerTitle
-                                ) :
-                                (
-                                    <>
-                                        <Span>book your</Span>
-                                        ticket for <TypewriterComponent options={{
-                                            strings: ["Movie", "Events"],
-                                            autoStart: true,
-                                            loop: true,
-                                        }} />
-                                    </>
-                                )
-                            }
-                        </Title>
-                        <p>
-                            {
-                                BannerPara ? (BannerPara) : (<>Safe, secure, reliable ticketing.Your ticket to live entertainment!</>)
-                            }
-                        </p>
-                    </BannerContent>
-                </Container>
-            </Section>
+            {
+                banner_section && (
+                    <>
+                        <Section>
+                            <Banner style={{ "backgroundImage": "url('./assets/images/sign_login/sign_login_bg.jpg')" }}></Banner>
+                            <Container>
+                                <BannerContent>
+                                    <Title>
+                                        {banner_title ?
+                                            (
+                                                banner_title
+                                            ) :
+                                            (
+                                                <>
+                                                    <Span>book your</Span>
+                                                    ticket for <TypewriterComponent options={{
+                                                        strings: ["Movie", "Events"],
+                                                        autoStart: true,
+                                                        loop: true,
+                                                    }} />
+                                                </>
+                                            )
+                                        }
+                                    </Title>
+                                    <p>
+                                        {
+                                            banner_paragraph ? (banner_paragraph) : (<>Safe, secure, reliable ticketing.Your ticket to live entertainment!</>)
+                                        }
+                                    </p>
+                                </BannerContent>
+                            </Container>
+                        </Section>
+                    </>
+                )
+            }
 
             {/* Search Section */}
             {
-                SearchSection && (
+                search_section && (
                     <>
                         <SearchSections>
                             <Container>
@@ -149,7 +184,7 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
 
             {/* Movie Section */}
             {
-                MovieSection && (
+                movie_section && (
                     <>
                         <CustomSection>
                             <Container>
@@ -166,22 +201,16 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
                                     </CustomHeader>
                                     <CustomTabArea>
                                         <Carousel autoPlay={true} showStatus={false} infiniteLoop={true} centerMode={true}>
-                                            <CarouselItems>
-                                                <CarouselThumb>
-                                                    <CarouselImage src='assets/images/movie/movie01.jpg' alt='thumb' />
-                                                </CarouselThumb>
-                                            </CarouselItems>
-                                            <CarouselItems>
-                                                <CarouselThumb>
-                                                    <CarouselImage src='assets/images/movie/movie02.jpg' alt='thumb' />
-                                                </CarouselThumb>
-                                            </CarouselItems>
+                                            {
+                                                Thumbnail.map((poster, index) => (
+                                                    <CarouselItems key={index}>
+                                                        <CarouselThumb >
+                                                            <CarouselImage src={poster.Thumbnail} alt={poster.Title} />
+                                                        </CarouselThumb>
+                                                    </CarouselItems>
 
-                                            <CarouselItems>
-                                                <CarouselThumb>
-                                                    <CarouselImage src='assets/images/movie/movie03.jpg' alt='thumb' />
-                                                </CarouselThumb>
-                                            </CarouselItems>
+                                                ))
+                                            }
                                         </Carousel>
                                     </CustomTabArea>
                                 </div>
@@ -193,7 +222,7 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
 
             {/* Event Section */}
             {
-                EventSection && (
+                event_section && (
                     <>
                         <CustomSection>
                             <Container>
@@ -210,22 +239,16 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
                                     </CustomHeader>
                                     <CustomTabArea>
                                         <Carousel autoPlay={true} showStatus={false} infiniteLoop={true} centerMode={true} showThumbs={false}>
-                                            <CarouselItems>
-                                                <CarouselThumb>
-                                                    <CarouselImage src='assets/images/event/event01.jpg' alt='thumb' />
-                                                </CarouselThumb>
-                                            </CarouselItems>
-                                            <CarouselItems>
-                                                <CarouselThumb>
-                                                    <CarouselImage src='assets/images/event/event02.jpg' alt='thumb' />
-                                                </CarouselThumb>
-                                            </CarouselItems>
+                                            {
+                                                EventThumb.map((event, index) => (
+                                                    <CarouselItems key={index}>
+                                                        <CarouselThumb >
+                                                            <CarouselImage src={event.Thumbnail} alt={event.Title} />
+                                                        </CarouselThumb>
+                                                    </CarouselItems>
 
-                                            <CarouselItems>
-                                                <CarouselThumb>
-                                                    <CarouselImage src='assets/images/event/event03.jpg' alt='thumb' />
-                                                </CarouselThumb>
-                                            </CarouselItems>
+                                                ))
+                                            }
                                         </Carousel>
                                     </CustomTabArea>
                                 </div>
@@ -234,10 +257,14 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
                     </>
                 )
             }
+
             {/* Passed Child */}
             {
-                children
+                <CustomSection>
+                    {children}
+                </CustomSection>
             }
+
             {/* Footer */}
             <FooterSection>
                 <Container>
@@ -270,4 +297,4 @@ function Bash({ BannerTitle, BannerPara, SearchSection = true, EventSection = tr
     )
 }
 
-export default Bash
+export default Base

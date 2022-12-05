@@ -7,6 +7,7 @@ import { Container, Overlay, OverlayContainer, OverlayPanel, Input, Form, FormCo
 
 
 function Reset(props) {
+    document.title = "Reset Password"
     const [success, setsuccess] = useState(false);
     const [value, setValues] = useState({ email: "", message: "", variant: "" })
     const [status, setStatus] = useState()
@@ -18,6 +19,7 @@ function Reset(props) {
     const handleSubmit = (e) => {
         setStatus(false)
         e.preventDefault()
+        console.log("clicked")
         Api.post("user/reset-password/verify", value)
             .then(res => {
 
@@ -49,8 +51,8 @@ function Reset(props) {
                                             "flexDirection": "column",
                                             "margin": "11rem 2rem"
                                         }}>
-                                            <h1 style={{ "marginTop": "3rem" }}>Reset Password</h1>
-                                            <h3 style={{ "marginTop": "1rem" }}>
+                                            <h1 style={{ "marginTop": "3rem", color: "#000" }}>Reset Password</h1>
+                                            <h3 style={{ "marginTop": "1rem", color: "#000" }}>
                                                 An email has been sent to <span style={{ "color": "#FF4B2B" }}>{value?.email}</span>.
                                             </h3>
                                         </div>
@@ -70,10 +72,10 @@ function Reset(props) {
                                 <>
                                     <FormContainer className='sign-up-container'>
                                         <Form onSubmit={handleSubmit} method='post'>
-                                            <h1>Reset Password</h1>
+                                            <h1 style={{ color: "#000" }}>Reset Password</h1>
                                             {status && <Alert variant={value?.variant} message={value?.message} />}
                                             <Input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-                                            <Button title='reset' disabled={value.email ? false : true} />
+                                            <Button title='reset' disabled={value.email ? false : true} type="submit" />
                                         </Form>
                                     </FormContainer>
                                     <OverlayContainer>

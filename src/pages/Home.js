@@ -6,7 +6,9 @@ function index(props) {
     return (
         <>
             <Layout props={props}
-                Page="Home"
+                page="Home"
+                search_section={false}
+                title={"Movie Ebooking"}
             />
         </>
     )

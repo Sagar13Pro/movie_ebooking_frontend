@@ -9,6 +9,7 @@ import { Container, Overlay, OverlayContainer, OverlayPanel, Input, Form, FormCo
 
 
 function Password(props) {
+    document.title = "Set Password"
     const [value, setValues] = useState({ email: "", passwd: "", cpasswd: "", message: "", variant: "" })
     const [passwdType, setPasswdType] = useState("password")
     const [status, setStatus] = useState()
@@ -25,7 +26,6 @@ function Password(props) {
 
     const handleChange = (e) => {
         setValues({ ...value, [e.target.name]: e.target.value })
-
         if (e.target.name === "cpasswd" && e.target.value !== value.passwd) {
             setStatus(true);
             setValues({ ...value, variant: "danger", "message": "Password does not matched!!!" })
@@ -83,10 +83,15 @@ function Password(props) {
         if (value.passwd === value.cpasswd && value.passwd !== "") {
             Api.put("/user/reset-password", value)
                 .then(res => {
+                    console.log(res)
                     if (res.data.status) {
                         setValues({ ...value, message: res.data.message, variant: "success" })
                         setStatus(true)
                         setTimeout(() => props.history.push(LOGIN), 6000)
+                    } else {
+                        console.log("ok")
+                        setValues({ ...value, message: res.data.message, variant: "danger" })
+                        setStatus(true)
                     }
                 })
                 .catch(err => {
@@ -115,7 +120,7 @@ function Password(props) {
                             (
                                 <>
                                     <div>
-                                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>Page Expired</div>
+                                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "#000" }}>Page Expired</div>
                                     </div>
                                 </>
                             ) :
@@ -123,9 +128,9 @@ function Password(props) {
                                 <>
                                     <FormContainer className='sign-in-container'>
                                         <Form onSubmit={handleSubmit} method='post'>
-                                            <h1 style={{ "marginBottom": "15px" }}>Set Password</h1>
+                                            <h1 style={{ "marginBottom": "15px", color: "#000" }}>Set Password</h1>
                                             {
-                                                status && <Alert message={value?.message} timeout={10000} variant={value?.variant} />
+                                                status && <Alert message={value?.message} timeout={0} variant={value?.variant} />
                                             }
                                             <Input type="email" name="email" onChange={handleChange} value={value.email} readOnly />
                                             <InputWrapper>
@@ -177,8 +182,7 @@ function Password(props) {
                                                         <FaEye onClick={() => setPasswdType("password")} />
                                                 }
                                             </InputWrapper>
-                                            <Button title='Change' disabled={(value.passwd && value.cpasswd) ? false : true} onFocus={Handle_Focus}
-                                                onBlur={Handle_Blur} />
+                                            <Button title='Change' disabled={(value.passwd && value.cpasswd) ? false : true} type="submit" />
                                         </Form >
                                     </FormContainer >
                                     <OverlayContainer>

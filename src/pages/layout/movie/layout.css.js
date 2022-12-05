@@ -21,7 +21,7 @@ export const Header = styled.header`
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 9999;
     color: #000;
 `;
 export const Container = styled.div`
@@ -78,15 +78,13 @@ export const Menu = styled.ul`
             padding-top: 20px;
             padding-bottom: 20px;
         }
-    }
-
-    @media (max-width: 991px) {
-        ${HeaderWrapper} &.active {
+         ${HeaderWrapper} &.active {
             animation-name: ${FadeInLeft};
             animation-duration: 1s;
             display: block;
         }
     }
+
     @media (max-width: 991px) and (min-width: 576px)
         ${HeaderWrapper} & {
             padding-left: 45px;
@@ -229,7 +227,7 @@ export const BurgerMenu = styled.div`
 `;
 
 export const Section = styled.section`
-    padding: 250px 0 316px;
+    padding: 250px 0 200px;
     color: #fff;
 `;
 export const Banner = styled.div`
@@ -600,8 +598,6 @@ export const FooterArea = styled.div`
 `;
 
 export const FooterLeft = styled.div`
-    margin-bottom: 25px;
-
     & > p > a {
         color: #31d7a9;
         transition: all ease 0.3s;    
@@ -632,8 +628,6 @@ export const FooterLinks = styled.ul`
 `;
 
 
-
-// ! Utpal 
 export const Card = styled.div`
     &.card-item {
         display: none;
@@ -664,10 +658,11 @@ export const CardHeader = styled.div`
     }
 `;
 export const CardThumb = styled.div`
-        overflow: hidden;
-        position: relative;
+    overflow: hidden;
+    position: relative;
+    transition: all ease 0.3s;
 
-    & > a {
+    & > a { 
         display: block;
     }
     & > a > img {
@@ -679,6 +674,11 @@ export const CardThumb = styled.div`
         width: 100%;
         -webkit-transition: all ease 0.3s;
         transition: all ease 0.3s;
+    }
+
+    &:hover {
+        transform: scale(1.1);
+        cursor: pointer;
     }
 `;
 export const Image = styled.img`
@@ -706,7 +706,7 @@ export const H5 = styled.h5`
         margin-bottom: 0!important;
     }
 
-    & > a{
+    & > span{
         padding: 0 .5rem;
         overflow: hidden;
         display: block;
@@ -720,8 +720,9 @@ export const H5 = styled.h5`
         font-smooth: auto;
         line-height: 1.25rem;
         color: #fff;
+        cursor: pointer
     }
-    & > a > span:hover {
+    & > span:hover {
         text-decoration: underline;
     }
     @media (min-width: 576px)

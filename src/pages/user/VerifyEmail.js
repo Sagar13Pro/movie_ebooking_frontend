@@ -8,7 +8,7 @@ function VerifyEmail(props) {
     const { decodedToken, isExpired } = useJwt(token);
 
     useEffect(() => {
-        if (decodedToken && isExpired) {
+        if (decodedToken && !isExpired) {
             Api.get(`/user/verify/${token}`)
                 .then(res => {
                     console.log(res)

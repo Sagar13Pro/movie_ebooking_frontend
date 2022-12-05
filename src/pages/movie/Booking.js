@@ -1,36 +1,42 @@
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
-import React, { useEffect, useState } from 'react'
-import Checkout from "../../components/CheckOut/CheckOut"
+import React, { useState } from 'react'
+import Auth from '../../services/Auth'
+import Payment from "./Payment"
 
-const stripePromise = loadStripe("pk_test_51M8eJpIEQKqcK2hc2nESvdqYR0PiKNMJU0HGI5fFNA9BwNmNneNHS2sF06aduEZSRUn3DI5mgFVBCXwYIg6muSEl00QIcBp69d")
+function Booking(props) {
+    const { email } = Auth.getDetails();
+    const [details, setDetails] = useState(props.location.state)
+    const [status, setStatus] = useState();
+    const screen = ["Aud 1", "Aud 2", "Aud 3", "Aud 4", "Aud 51"]
 
-function Booking() {
-    document.getElementsByTagName("body")[0].style.backgroundColor = "#fff";
-    const [clientSecret, setClientSecret] = useState(null);
-
-    useEffect(() => {
-        fetch("http://localhost:4000/api/v1/user/book", { method: "POST" })
-            .then(async (r) => {
-                const { client_secret } = await r.json();
-                setClientSecret(client_secret)
-            })
-    }, [])
-    const options = {
-        clientSecret,
-        appearance: {
-            theme: 'flat',
-        }
-    };
+    const clientSecret = new URLSearchParams(window.location.search).get(
+        "payment_intent_client_secret"
+    )
+    console.log(props)
     return (
         <>
             {
-                stripePromise && clientSecret && (
-                    <Elements stripe={stripePromise} options={options}>
-                        <Checkout />
-                    </Elements>)
-            }
-        </>
+                (status || clientSecret) ? (<Payment data={props.location.state} history={props} client={clientSecret} />) :
+                    (
+                        details && (
+                            <>
+                                <h3>Booking as: {email}</h3>
+                                <h3>location: {details.cinemaName}</h3>
+                                <h3>Screen: {screen[0]}</h3>
+                                <h3>On: Dec 2</h3>
+                                <h3>Time: {details.showTime}</h3>
+                                <h3>Seats: {details.seats.map(seat => `${seat},`)}</h3>
+                                <h3>
+                                    Adult : {details.tickets.adult}<br />
+                                    Child: {details.tickets.child}<br />
+                                    Senior: {details.tickets.senior}<br /><br />
+
+                                    Total : {details.price}
+                                </h3>
+
+                                <button onClick={() => setStatus(true)}>Continue to Pay</button>
+                            </>)
+                    )
+            }        </>
     )
 }
 

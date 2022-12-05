@@ -19,7 +19,9 @@
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.6",
     "typewriter-effect": "^2.19.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "bootstrap": "^5.2.3",
+    "react-bootstrap": "^2.6.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,19 +1,34 @@
-//
+//Error
 import Notfound from "../pages/error/Notfound"
 
-//Elements
-import Dash from "../pages/dash/Dash"
+// Index
+import Home from "../pages/Home"
+
+// User
+import Dash from "../pages/user/dash/Dash"
 import Login from "../pages/user/Login"
 import Reset from "../pages/user/password/Reset"
 import Password from "../pages/user/password/Password"
 import VerifyEmail from "../pages/user/VerifyEmail"
-import Home from "../pages/Home"
-import Movie from "../pages/movie/Movies"
-import Profile from "../pages/dash/Profile"
+import Profile from "../pages/user/dash/Profile"
+import MovieDetails from "../pages/user/dash/Movie.user"
+// Movie
+import MovieList from "../pages/movie/MovieList"
+import Movie from "../pages/movie/Movie"
+
+// Event
+import EventList from "../pages/events/EventList"
+import Event from "../pages/events/Event"
+
 import Booking from "../pages/movie/Booking"
 
+// Admin
+import AdminDash from "../pages/admin/dash/Index"
+import AdminLogin from "../pages/admin/login/Admin.login"
+import AddMovie from "../pages/admin/dash/AddMovie"
+
 //paths
-import { DASHBOARD, RESET, PASSWORD, NOTFOUND, VERIFYEMAIL, INDEX, LOGIN, MOVIE, PROFILE, BOOKING } from "./Path"
+import { DASHBOARD, RESET, PASSWORD, NOTFOUND, VERIFYEMAIL, INDEX, LOGIN, MOVIE, PROFILE, MOVIELIST, BOOKING, EVENTLIST, ADMIN, ADMINLOGIN, ADDMOVIE, MOVIEDETAILS, EVENT } from "./Path"
 
 const routes = [
     /* 
@@ -22,12 +37,6 @@ const routes = [
         exact => the path must be matched with URI
         public => is this component can be access with session or login
     */
-    {
-        path: BOOKING,
-        element: Booking,
-        exact: true,
-        public: true
-    },
     {
         path: INDEX,
         element: Home,
@@ -41,10 +50,22 @@ const routes = [
         public: true
     },
     {
+        path: ADMINLOGIN,
+        element: AdminLogin,
+        exact: true,
+        public: true
+    },
+    {
         path: DASHBOARD,
         element: Dash,
         exact: true,
         public: false,
+    },
+    {
+        path: ADMIN,
+        element: AdminDash,
+        exact: true,
+        public: false
     },
     {
         path: PROFILE,
@@ -71,10 +92,46 @@ const routes = [
         public: true
     },
     {
-        path: MOVIE,
-        element: Movie,
+        path: MOVIELIST,
+        element: MovieList,
         exact: true,
         public: true
+    },
+    {
+        path: MOVIE,
+        element: Movie,
+        exact: false,
+        public: true
+    },
+    {
+        path: EVENTLIST,
+        element: EventList,
+        exact: true,
+        public: true
+    },
+    {
+        path: EVENT,
+        element: Event,
+        exact: false,
+        public: true
+    },
+    {
+        path: BOOKING,
+        element: Booking,
+        exact: false,
+        public: false
+    },
+    {
+        path: ADDMOVIE,
+        element: AddMovie,
+        exact: true,
+        public: false
+    },
+    {
+        path: MOVIEDETAILS,
+        element: MovieDetails,
+        exact: true,
+        public: false
     },
     {
         path: NOTFOUND,

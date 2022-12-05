@@ -5,6 +5,7 @@ import Alert from '../../components/Alert/Alert';
 import { DASHBOARD, RESET, INDEX } from "../../routes/Path"
 import Api from '../../apis/Api';
 import auth from "../../services/Auth"
+
 import "./index.css"
 import {
     MainDiv,
@@ -24,23 +25,24 @@ import {
 } from "./login.css"
 
 function Sign(props) {
+    document.title = "Login"
     // google 
     useEffect(() => {
         Api.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/user/success`, { Credential: true })
             .then(res => {
-                console.log(res)
-                auth.login(res.data.user, () => { props.history.push(DASHBOARD) })
+                auth.login(res.data.token, () => { props.history.push(DASHBOARD) })
             })
             .catch(err => console.log(err))
     }, [props])
 
     if (auth.isAuthenciated()) {
-        props.history.push(DASHBOARD)
+        if (!props.location.state?.fromMovie)
+            props.history.push(DASHBOARD)
     }
 
     const [status, setStatus] = useState()
     const [passwdType, setPasswdType] = useState("password")
-    const [values, setValues] = useState({ fname: "", lname: "", email: "", passwd: "", phone: "", cpasswd: "" })
+    const [values, setValues] = useState({ fname: "", lname: "", email: "sagarvanesa@gmail.com", passwd: "Test@123", phone: "", cpasswd: "" })
     const [SignUp, setSignUp] = useState({ status: "", variant: "", message: "" });
     const [SignIn, setSignIn] = useState({ status: "", variant: "", message: "" });
 
@@ -109,9 +111,8 @@ function Sign(props) {
                 .then(res => {
                     if (res.data.status) {
                         setSignUp(res.data)
-                        setTimeout(() => window.location.reload(), 8000)
+                        setTimeout(() => window.location.reload(), 4000)
                     } else {
-                        console.log(res.data)
                         setSignUp({ variant: "danger", message: res.data.message });
                     }
                 })
@@ -135,7 +136,12 @@ function Sign(props) {
             Api.post(`/user/auth`, value)
                 .then(res => {
                     if (res.data.status) {
-                        auth.login(res.data.user, () => { props.history.push(DASHBOARD) })
+                        auth.login(res.data.token, () => {
+                            if (props.location.state?.fromMovie)
+                                props.history.push({ pathname: props.location.state.redirect_url })
+                            else
+                                props.history.push(DASHBOARD)
+                        })
                     } else {
                         setSignIn({ variant: "danger", message: res.data.message })
                         setStatus(true)
@@ -167,7 +173,7 @@ function Sign(props) {
                 <Container id='container'>
                     <FormContainer className='sign-up-container'>
                         <Form onSubmit={handle_Submit_SignUp}>
-                            <h1>Create Account</h1>
+                            <h1 className='font-color-dark'>Create Account</h1>
                             {status && <Alert variant={SignUp.variant} message={SignUp.message} timeout={0} fade={false} />}
                             <Input type="text" placeholder="First Name" name="fname" onChange={Handle_Change} required />
                             <Input type="text" name="lname" placeholder="Last Name" onChange={Handle_Change} required />
@@ -227,11 +233,11 @@ function Sign(props) {
                     </FormContainer>
                     <FormContainer className='sign-in-container'>
                         <Form onSubmit={handle_Submit_SignIn}>
-                            <h1>Sign In</h1>
+                            <h1 className='font-color-dark'>Sign In</h1>
                             {status && <Alert variant={SignIn.variant} message={SignIn.message} />}
-                            <Input type="email" onChange={Handle_Change} name="email" placeholder="Email" required />
+                            <Input type="email" onChange={Handle_Change} name="email" placeholder="Email" required value={values.email} />
                             <InputWrapper>
-                                <Input type={passwdType} onChange={Handle_Change} name="passwd" placeholder="Password" required />
+                                <Input type={passwdType} onChange={Handle_Change} name="passwd" placeholder="Password" required value={values.passwd} />
                                 {
                                     passwdType === "password" ?
                                         <FaEyeSlash onClick={() => setPasswdType("text")} />
@@ -240,7 +246,7 @@ function Sign(props) {
                                 }
                             </InputWrapper>
                             <Anchor href={RESET}>Forgot your password?</Anchor>
-                            <Button title="sign in" disabled={(values.email.length >= 1 && values.passwd.length >= 1) ? false : true} />
+                            <Button title="sign in" type='submit' disabled={(values.email.length >= 1 && values.passwd.length >= 1) ? false : true} />
                         </Form>
                     </FormContainer>
                     <OverlayContainer>

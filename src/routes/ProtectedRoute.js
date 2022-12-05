@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect, Route, useHistory } from 'react-router-dom'
 import Auth from '../services/Auth'
+import AAuth from '../services/AdminAuth'
 
 function ProtectedRoute({ component: Component, ...rest }) {
     const history = useHistory();
@@ -10,7 +11,11 @@ function ProtectedRoute({ component: Component, ...rest }) {
             <Route {...rest} render={props => {
                 if (Auth.isAuthenciated()) {
                     return <Component {...props} history={history} />
-                } else {
+                }
+                else if (AAuth.isAuthenciated()) {
+                    return <Component {...props} history={history} />
+                }
+                else {
                     return <Redirect to={"/"} />
                 }
             }} />
