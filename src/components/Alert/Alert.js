@@ -23,16 +23,15 @@ const AlertDiv = styled.div`
     display: ${props => props.display};
     position: relative;
     padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: 0.25rem;
-    margin: 10px;
+    margin: ${props => props.margin && props.margin}px;
     animation: ${props => props.fade === true && fadeOut} ${props => props.timeout && props.timeout / 1000}s;
     ${props => props.variant === "success" && AlertSuccess}
     ${props => props.variant === "danger" && AlertDanger}
 `;
 
-export default function Alert({ message = "Hello, there", variant = "success", fade = true, timeout = 10000 }) {
+export default function Alert({ message = "Hello, there", variant = "success", fade = true, timeout = 10000, margin = 10 }) {
     const [display, setDisplay] = useState("block")
 
     if (timeout !== 0) {
@@ -44,7 +43,7 @@ export default function Alert({ message = "Hello, there", variant = "success", f
 
     return (
         <>
-            <AlertDiv id="alert" variant={variant} timeout={timeout} display={display} fade={fade}>
+            <AlertDiv id="alert" variant={variant} timeout={timeout} display={display} fade={fade} margin={margin}>
                 <strong>{message}</strong>
             </AlertDiv>
         </>

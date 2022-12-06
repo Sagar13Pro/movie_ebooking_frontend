@@ -174,7 +174,7 @@ function Sign(props) {
                     <FormContainer className='sign-up-container'>
                         <Form onSubmit={handle_Submit_SignUp}>
                             <h1 className='font-color-dark'>Create Account</h1>
-                            {status && <Alert variant={SignUp.variant} message={SignUp.message} timeout={5000} fade={false} />}
+                            {status && <Alert variant={SignUp.variant} message={SignUp.message} timeout={7000} fade={false} margin={0} />}
                             <Input type="text" placeholder="First Name" name="fname" onChange={Handle_Change} required />
                             <Input type="text" name="lname" placeholder="Last Name" onChange={Handle_Change} required />
                             <Input type="email" name="email" placeholder="Email" onChange={Handle_Change} required />
