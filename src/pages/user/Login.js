@@ -174,7 +174,7 @@ function Sign(props) {
                     <FormContainer className='sign-up-container'>
                         <Form onSubmit={handle_Submit_SignUp}>
                             <h1 className='font-color-dark'>Create Account</h1>
-                            {status && <Alert variant={SignUp.variant} message={SignUp.message} timeout={0} fade={false} />}
+                            {status && <Alert variant={SignUp.variant} message={SignUp.message} timeout={5000} fade={false} />}
                             <Input type="text" placeholder="First Name" name="fname" onChange={Handle_Change} required />
                             <Input type="text" name="lname" placeholder="Last Name" onChange={Handle_Change} required />
                             <Input type="email" name="email" placeholder="Email" onChange={Handle_Change} required />
@@ -228,7 +228,7 @@ function Sign(props) {
                                         <FaEye onClick={() => setPasswdType("password")} />
                                 }
                             </InputWrapper>
-                            <Button title="sign up" disabled={(values.fname.length >= 1 && values.lname.length >= 1 && values.email.length >= 1 && values.phone.length >= 1 && values.passwd.length >= 1 && values.cpasswd.length >= 1) ? false : true} />
+                            <Button title="sign up" disabled={(values.fname.length >= 1 && values.lname.length >= 1 && values.email.length >= 1 && values.phone.length >= 1 && values.passwd.length >= 1 && values.cpasswd.length >= 1) ? false : true} type="submit" />
                         </Form>
                     </FormContainer>
                     <FormContainer className='sign-in-container'>
