@@ -661,7 +661,7 @@ export const CardThumb = styled.div`
     overflow: hidden;
     position: relative;
     transition: all ease 0.3s;
-
+    max-height: 365px;
     & > a { 
         display: block;
     }

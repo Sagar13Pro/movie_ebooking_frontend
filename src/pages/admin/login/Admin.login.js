@@ -46,10 +46,11 @@ function Login(props) {
         if (value.email && value.passwd) {
             Api.post(`/admin/auth`, value)
                 .then(res => {
+                    console.log(res)
                     if (res.data.status) {
                         AAuth.login(res.data.token, () => { props.history.push(ADMIN) })
                     } else {
-                        setValues({ variant: "danger", message: res.data.message })
+                        setValues({ variant: "danger", message: res.data.message, email: value.email, passwd: value.passwd })
                         setStatus(true)
                     }
                 })
@@ -75,7 +76,7 @@ function Login(props) {
                                         <FaEye onClick={() => setPasswdType("password")} />
                                 }
                             </InputWrapper>
-                            <Button title="sign in" disabled={(values?.email.length >= 1 && values?.passwd.length >= 1) ? false : true} />
+                            <Button title="sign in" disabled={(values?.email.length >= 1 && values?.passwd.length >= 1) ? false : true} type="submit" />
                         </Form>
                     </FormContainer>
                     <OverlayContainer>

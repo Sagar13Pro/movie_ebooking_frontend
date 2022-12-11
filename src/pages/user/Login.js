@@ -42,7 +42,7 @@ function Sign(props) {
 
     const [status, setStatus] = useState()
     const [passwdType, setPasswdType] = useState("password")
-    const [values, setValues] = useState({ fname: "", lname: "", email: "sagarvanesa@gmail.com", passwd: "Test@123", phone: "", cpasswd: "" })
+    const [values, setValues] = useState({ fname: "", lname: "", email: "", passwd: "", phone: "", cpasswd: "" })
     const [SignUp, setSignUp] = useState({ status: "", variant: "", message: "" });
     const [SignIn, setSignIn] = useState({ status: "", variant: "", message: "" });
 

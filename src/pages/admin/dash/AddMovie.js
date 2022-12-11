@@ -5,12 +5,15 @@ import Layout from "./Admin.layout"
 import { Input, TextArea } from '../../user/login.css'
 import Button from '../../../components/Button/Button'
 import Api from '../../../apis/Api'
+import Alert from '../../../components/Alert/Alert'
 
 function AddMovie(props) {
     const [castArr, setCastArr] = useState([1])
     const [genreArr, setGenreArr] = useState([1])
     const [showTimeArr, setShowTimeArr] = useState([1])
     const [value, setValue] = useState({})
+
+    const [resp, setResp] = useState({ status: false, message: "", variant: "" })
 
     const [genre, setGenre] = useState({})
     const [showTime, setShowTime] = useState({})
@@ -33,31 +36,42 @@ function AddMovie(props) {
         setGenre({ ...genre, [e.target.name]: e.target.value })
     }
     // Cast
-    const Handle_Cast_Change = e => {
-        setCast(cast => [...cast, JSON.parse(e.target.value)])
-    }
-
     const handle_Change = e => {
         setValue({ ...value, [e.target.name]: e.target.value })
     }
-    const Handle_Submit = () => {
+
+    const Handle_JSONParse = e => {
+        const { value } = e.target
+        try {
+            if (JSON.parse(value))
+                setCast(cast => [...cast, value])
+        } catch (error) {
+            alert("Check the format. Provide Quotes to both.")
+        }
+    }
+    const Handle_Submit = e => {
+        e.preventDefault();
         let payload = {
-            "Genre": [Object.values(genre)],
+            "Genre": Object.values(genre),
             "Duration": value?.duration,
             "Synosis": value?.synosis,
-            "Cast": cast,
+            "Cast": cast.length ? cast.map(i => JSON.parse(i)) : [],
             "Thumbnail": value?.thumbnail,
             "Rating": Number(value?.rating),
             "Title": value?.title,
-            "ShowTime": [Object.values(showTime)],
+            "ShowTime": Object.values(showTime),
             "Director": value?.director
         }
 
+        console.log(payload)
         if (payload) {
             Api.post(`/movie/create`, payload)
                 .then(res => {
-                    if (res.data.status)
+                    if (res.data.status) {
                         console.log(res.data)
+                        setResp({ ...resp, status: true, message: res.data.message, variant: "success" })
+                        setTimeout(() => window.location.reload(), 5000)
+                    }
                 })
                 .catch(err => console.log(err))
         }
@@ -71,6 +85,7 @@ function AddMovie(props) {
                             <CardBody>
                                 <ContentContainer>
                                     <ContentBody style={{ color: "#000000" }}>
+                                        {resp?.status && <Alert variant={resp?.variant} message={resp?.message} timeout={7000} fade={false} margin={0} />}
                                         <form onSubmit={Handle_Submit}>
                                             <Row className='my-3'>
                                                 <Col className="col-sm-12 col-md-4">
@@ -107,7 +122,7 @@ function AddMovie(props) {
                                                     castArr.map((i, index) => (
                                                         <Row className='my-2' key={i}>
                                                             <Col className="col-sm-12">
-                                                                <TextArea type="text" placeholder='{name: "some",roleName: "role" , image: "url"}' name={`cast_${index}`} onChange={Handle_Cast_Change}>
+                                                                <TextArea type="text" placeholder='{"name":"value", "roleName":"value", "image":"url"}`}' name={`cast_${index}`} onBlur={Handle_JSONParse}>
                                                                 </TextArea>
                                                             </Col>
                                                         </Row>
@@ -157,7 +172,7 @@ function AddMovie(props) {
                                                     <TextArea name="synosis" placeholder='Synosis' onChange={handle_Change} required></TextArea>
                                                 </Col>
                                             </Row>
-                                            <Button title='Submit' />
+                                            <Button title='Submit' type='submit' />
                                         </form>
                                     </ContentBody>
                                 </ContentContainer>
