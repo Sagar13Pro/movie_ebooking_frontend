@@ -81,7 +81,7 @@ export default function CheckOut({ history }) {
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: `${process.env.REACT_APP_FRONTEND_BASE_URL}/booking/status`,
+                return_url: `${process.env.REACT_APP_FRONTEND_BASE_URL}booking/status`,
                 receipt_email: email,
             },
         });
